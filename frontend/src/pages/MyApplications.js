@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { applicationAPI } from '../services/api';
 
 const MyApplications = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -56,6 +56,34 @@ const MyApplications = () => {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || user.role !== 'job_seeker') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
+          <p className="text-gray-600 mb-4">Only job seekers can view their applications.</p>
+          <Link
+            to="/login"
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

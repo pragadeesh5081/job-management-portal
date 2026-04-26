@@ -134,7 +134,7 @@ const RecruiterDashboard = () => {
         </div>
 
         {/* Statistics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
           {/* Job Statistics */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-2">
@@ -179,6 +179,17 @@ const RecruiterDashboard = () => {
             </div>
             <p className="text-3xl font-bold text-gray-900">{applicationStats.shortlisted}</p>
             <p className="text-sm text-gray-600 mt-1">Potential candidates</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-gray-500">Rejected</h3>
+              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-3xl font-bold text-gray-900">{applicationStats.rejected}</p>
+            <p className="text-sm text-gray-600 mt-1">Declined candidates</p>
           </div>
         </div>
 

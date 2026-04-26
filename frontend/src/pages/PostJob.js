@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { jobAPI } from '../services/api';
 
 const PostJob = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -47,6 +47,17 @@ const PostJob = () => {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user || user.role !== 'recruiter') {
     return (

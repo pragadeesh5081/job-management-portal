@@ -81,7 +81,7 @@ const JobSeekerDashboard = () => {
             Track your job applications and discover new opportunities.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-blue-900 mb-2">Total Applications</h3>
               <p className="text-3xl font-bold text-blue-600">{applications.length}</p>
@@ -96,6 +96,12 @@ const JobSeekerDashboard = () => {
               <h3 className="text-lg font-semibold text-yellow-900 mb-2">Pending</h3>
               <p className="text-3xl font-bold text-yellow-600">
                 {applications.filter(app => app.status === 'Applied').length}
+              </p>
+            </div>
+            <div className="bg-red-50 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-red-900 mb-2">Rejected</h3>
+              <p className="text-3xl font-bold text-red-600">
+                {applications.filter(app => app.status === 'Rejected').length}
               </p>
             </div>
           </div>
