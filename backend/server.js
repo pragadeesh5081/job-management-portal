@@ -3,6 +3,14 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+// Import database and models (this also triggers the database sync)
+require('./models');
+
+// Import routes
+const authRoutes = require('./routes/auth');
+const jobRoutes = require('./routes/jobs');
+const applicationRoutes = require('./routes/applications');
+
 const app = express();
 
 // Middleware
@@ -12,6 +20,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/applications', applicationRoutes);
 
 // Serve frontend static files in production
 if (process.env.NODE_ENV === 'production') {
