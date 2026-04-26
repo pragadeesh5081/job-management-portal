@@ -174,7 +174,7 @@ const JobSeekerDashboard = () => {
                         {application.status}
                       </span>
                       <a
-                        href={`http://localhost:5000${application.resumeUrl}`}
+                        href={`${process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000'}${application.resumeUrl}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-500 text-sm flex items-center"

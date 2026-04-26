@@ -226,7 +226,7 @@ const ManageApplications = () => {
 
                       <div className="flex items-center space-x-4">
                         <a
-                          href={`http://localhost:5000${application.resumeUrl}`}
+                          href={`${process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000'}${application.resumeUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:text-blue-500 text-sm flex items-center"
