@@ -4,19 +4,20 @@ import { useAuth } from '../context/AuthContext';
 import { jobAPI, applicationAPI } from '../services/api';
 
 const RecruiterDashboard = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated || (user && user.role !== 'recruiter')) {
       navigate('/login');
       return;
     }
     fetchDashboardData();
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, user, navigate, authLoading]);
 
   const fetchDashboardData = async () => {
     try {

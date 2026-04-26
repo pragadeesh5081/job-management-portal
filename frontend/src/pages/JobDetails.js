@@ -6,7 +6,7 @@ import { jobAPI, applicationAPI } from '../services/api';
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,13 +19,14 @@ const JobDetails = () => {
   const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
     fetchJobDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, isAuthenticated, navigate]);
+  }, [id, isAuthenticated, navigate, authLoading]);
 
   const fetchJobDetails = async () => {
     try {
