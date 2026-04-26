@@ -133,7 +133,7 @@ router.get('/job/:jobId', [auth, authorize('recruiter')], async (req, res) => {
     }
 
     const applications = await Application.findAll({
-      where: { jobId },
+      where: { jobId, isArchivedByRecruiter: false },
       include: [
         {
           model: User,
@@ -224,6 +224,9 @@ router.put('/:id/status', [
 router.get('/recruiter/all', [auth, authorize('recruiter')], async (req, res) => {
   try {
     const applications = await Application.findAll({
+      where: {
+        isArchivedByRecruiter: false
+      },
       include: [
         {
           model: Job,
@@ -269,9 +272,15 @@ router.delete('/:id', [auth], async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to delete this application' });
     }
 
-    await application.destroy();
-
-    res.json({ message: 'Application deleted successfully' });
+    if (req.user.role === 'recruiter') {
+      // Soft delete: hide from recruiter's dashboard
+      await application.update({ isArchivedByRecruiter: true });
+      return res.json({ message: 'Application removed from your view' });
+    } else {
+      // Hard delete: withdrawn by job seeker
+      await application.destroy();
+      return res.json({ message: 'Application deleted successfully' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

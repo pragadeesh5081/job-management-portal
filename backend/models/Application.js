@@ -34,6 +34,10 @@ const Application = sequelize.define('Application', {
     type: DataTypes.ENUM('Applied', 'Shortlisted', 'Rejected'),
     allowNull: false,
     defaultValue: 'Applied'
+  },
+  isArchivedByRecruiter: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 });
 

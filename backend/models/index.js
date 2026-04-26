@@ -16,7 +16,7 @@ Application.belongsTo(Job, { foreignKey: 'jobId', as: 'job' });
 // Sync database
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ alter: true });
     console.log('Database synced successfully');
   } catch (error) {
     console.error('Error syncing database:', error);
