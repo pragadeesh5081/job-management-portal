@@ -5,16 +5,15 @@ require('dotenv').config();
 
 const app = express();
 
-// Allowed origins: localhost for dev, FRONTEND_URL env var for production
+// In production, frontend is served from the same origin — no CORS needed.
+// In development, allow localhost:3000.
 const allowedOrigins = [
   'http://localhost:3000',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
-// Middleware
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, Postman)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
     callback(new Error(`CORS policy: origin ${origin} not allowed`));
@@ -27,10 +26,25 @@ app.use(express.urlencoded({ extended: true }));
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
+
+// ─── Serve React frontend in production ──────────────────────────────────────
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '../frontend/build');
+
+  // Serve static files from the React build folder
+  app.use(express.static(buildPath));
+
+  // For any route that is NOT an API route, send back React's index.html
+  // so that React Router handles client-side navigation
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -42,4 +56,8 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log('Serving React frontend from ./frontend/build');
+  }
 });
+
