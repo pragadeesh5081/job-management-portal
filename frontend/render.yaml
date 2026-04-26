@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: job-management-frontend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://your-backend-app.onrender.com
