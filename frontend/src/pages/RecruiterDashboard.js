@@ -262,7 +262,7 @@ const RecruiterDashboard = () => {
                           {application.status}
                         </span>
                         <Link
-                          to={`/jobs/${application.job.id}`}
+                          to={`/manage-applications`}
                           className="text-blue-600 hover:text-blue-500 text-sm"
                         >
                           View Application

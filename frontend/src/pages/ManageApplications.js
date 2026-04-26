@@ -47,6 +47,21 @@ const ManageApplications = () => {
     }
   };
 
+  const handleDeleteApplication = async (applicationId) => {
+    if (!window.confirm('Are you sure you want to delete this application? This action cannot be undone.')) return;
+    
+    setUpdating(applicationId);
+    try {
+      await applicationAPI.withdrawApplication(applicationId);
+      setApplications(applications.filter(app => app.id !== applicationId));
+    } catch (error) {
+      setError('Failed to delete application');
+      console.error('Error deleting application:', error);
+    } finally {
+      setUpdating(null);
+    }
+  };
+
   const filteredApplications = applications.filter(app => {
     if (filter === 'all') return true;
     return app.status === filter.charAt(0).toUpperCase() + filter.slice(1);
@@ -247,24 +262,33 @@ const ManageApplications = () => {
                     </div>
 
                     {/* Action Buttons */}
-                    {application.status === 'Applied' && (
-                      <div className="flex space-x-2 ml-4">
-                        <button
-                          onClick={() => handleStatusUpdate(application.id, 'Shortlisted')}
-                          disabled={updating === application.id}
-                          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 text-sm"
-                        >
-                          {updating === application.id ? 'Updating...' : 'Shortlist'}
-                        </button>
-                        <button
-                          onClick={() => handleStatusUpdate(application.id, 'Rejected')}
-                          disabled={updating === application.id}
-                          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 text-sm"
-                        >
-                          {updating === application.id ? 'Updating...' : 'Reject'}
-                        </button>
-                      </div>
-                    )}
+                    <div className="flex flex-col space-y-2 ml-4 items-end">
+                      {application.status === 'Applied' && (
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleStatusUpdate(application.id, 'Shortlisted')}
+                            disabled={updating === application.id}
+                            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 text-sm"
+                          >
+                            {updating === application.id ? 'Updating...' : 'Shortlist'}
+                          </button>
+                          <button
+                            onClick={() => handleStatusUpdate(application.id, 'Rejected')}
+                            disabled={updating === application.id}
+                            className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 text-sm"
+                          >
+                            {updating === application.id ? 'Updating...' : 'Reject'}
+                          </button>
+                        </div>
+                      )}
+                      <button
+                        onClick={() => handleDeleteApplication(application.id)}
+                        disabled={updating === application.id}
+                        className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 text-sm"
+                      >
+                        {updating === application.id ? '...' : 'Delete'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

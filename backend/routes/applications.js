@@ -248,24 +248,30 @@ router.get('/recruiter/all', [auth, authorize('recruiter')], async (req, res) =>
 });
 
 // @route   DELETE /api/applications/:id
-// @desc    Delete an application (withdraw application)
-// @access  Private (Job Seeker only - application owner)
-router.delete('/:id', [auth, authorize('job_seeker')], async (req, res) => {
+// @desc    Delete an application (withdraw application or recruiter delete)
+// @access  Private (Job Seeker or Recruiter)
+router.delete('/:id', [auth], async (req, res) => {
   try {
-    const application = await Application.findByPk(req.params.id);
+    const application = await Application.findByPk(req.params.id, {
+      include: [{ model: Job, as: 'job' }]
+    });
 
     if (!application) {
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    // Check if the application belongs to the current user
-    if (application.userId !== req.user.id) {
+    // Check if the user is authorized to delete this application
+    if (req.user.role === 'job_seeker' && application.userId !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to delete this application' });
+    } else if (req.user.role === 'recruiter' && application.job.recruiterId !== req.user.id) {
+      return res.status(403).json({ message: 'Not authorized to delete this application' });
+    } else if (req.user.role !== 'job_seeker' && req.user.role !== 'recruiter') {
       return res.status(403).json({ message: 'Not authorized to delete this application' });
     }
 
     await application.destroy();
 
-    res.json({ message: 'Application withdrawn successfully' });
+    res.json({ message: 'Application deleted successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
