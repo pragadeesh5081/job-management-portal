@@ -224,9 +224,6 @@ router.put('/:id/status', [
 router.get('/recruiter/all', [auth, authorize('recruiter')], async (req, res) => {
   try {
     const applications = await Application.findAll({
-      where: {
-        isArchivedByRecruiter: false
-      },
       include: [
         {
           model: Job,

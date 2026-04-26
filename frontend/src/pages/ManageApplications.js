@@ -62,7 +62,9 @@ const ManageApplications = () => {
     }
   };
 
-  const filteredApplications = applications.filter(app => {
+  const activeApplications = applications.filter(app => !app.isArchivedByRecruiter);
+
+  const filteredApplications = activeApplications.filter(app => {
     if (filter === 'all') return true;
     return app.status === filter.charAt(0).toUpperCase() + filter.slice(1);
   });

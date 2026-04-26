@@ -83,6 +83,7 @@ const RecruiterDashboard = () => {
 
   const applicationStats = getApplicationStats();
   const jobStats = getJobStats();
+  const activeApplications = applications.filter(app => !app.isArchivedByRecruiter);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -254,13 +255,13 @@ const RecruiterDashboard = () => {
               </Link>
             </div>
             <div className="p-6">
-              {applications.length === 0 ? (
+              {activeApplications.length === 0 ? (
                 <div className="text-center py-8">
                   <p className="text-gray-600">No applications received yet.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {applications.slice(0, 3).map((application) => (
+                  {activeApplications.slice(0, 3).map((application) => (
                     <div key={application.id} className="border border-gray-200 rounded-lg p-4">
                       <h4 className="text-lg font-medium text-gray-900 mb-1">{application.user.name}</h4>
                       <p className="text-gray-600 text-sm mb-2">Applied for {application.job.title}</p>
